@@ -1,0 +1,719 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Self-Explanation Demo: Renal Physiology for Medical Students</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .header .level-badge {
+            display: inline-block;
+            background: rgba(255,255,255,0.2);
+            padding: 8px 20px;
+            border-radius: 20px;
+            margin-top: 10px;
+            font-weight: bold;
+        }
+
+        .progress-container {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .progress-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            position: relative;
+        }
+
+        .progress-step {
+            display: flex;
+            align-items: center;
+            flex: 1;
+        }
+
+        .step-circle {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.2em;
+            transition: all 0.3s ease;
+            z-index: 2;
+        }
+
+        .step-circle.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .step-circle.inactive {
+            background: #e0e0e0;
+            color: #999;
+        }
+
+        .step-line {
+            flex: 1;
+            height: 4px;
+            margin: 0 10px;
+            transition: all 0.3s ease;
+        }
+
+        .step-line.active {
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .step-line.inactive {
+            background: #e0e0e0;
+        }
+
+        .content-box {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 30px;
+            margin-bottom: 20px;
+            line-height: 1.8;
+        }
+
+        .content-box h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+            font-size: 1.8em;
+        }
+
+        .content-box h3 {
+            color: #764ba2;
+            margin-top: 25px;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+
+        .learning-text {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+            margin: 20px 0;
+            font-size: 1.05em;
+        }
+
+        .clinical-pearl {
+            background: #fef3c7;
+            border: 2px solid #f59e0b;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .clinical-pearl h4 {
+            color: #92400e;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .clinical-pearl h4::before {
+            content: "💊";
+            font-size: 1.3em;
+        }
+
+        .prompt-box {
+            background: #fff3cd;
+            border: 2px solid #ffc107;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .prompt-box h4 {
+            color: #856404;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .prompt-box h4::before {
+            content: "💭";
+            font-size: 1.3em;
+        }
+
+        .response-area {
+            background: white;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            padding: 15px;
+            min-height: 100px;
+            margin-top: 15px;
+            font-style: italic;
+            color: #666;
+        }
+
+        .example-response {
+            background: #d4edda;
+            border: 2px solid #28a745;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .example-response h4 {
+            color: #155724;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .example-response h4::before {
+            content: "✓";
+            font-size: 1.3em;
+            background: #28a745;
+            color: white;
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .feedback-box {
+            background: #e3f2fd;
+            border: 2px solid #2196F3;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .feedback-box h4 {
+            color: #1565c0;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .feedback-box h4::before {
+            content: "🤖";
+            font-size: 1.3em;
+        }
+
+        .feedback-positive {
+            background: #f0f9ff;
+            border-left: 4px solid #0ea5e9;
+            padding: 12px;
+            margin: 10px 0;
+            border-radius: 4px;
+        }
+
+        .feedback-positive::before {
+            content: "✨ ";
+        }
+
+        .feedback-suggestion {
+            background: #fef3c7;
+            border-left: 4px solid #f59e0b;
+            padding: 12px;
+            margin: 10px 0;
+            border-radius: 4px;
+        }
+
+        .feedback-suggestion::before {
+            content: "💡 ";
+        }
+
+        .feedback-extension {
+            background: #f3e8ff;
+            border-left: 4px solid #a855f7;
+            padding: 12px;
+            margin: 10px 0;
+            border-radius: 4px;
+        }
+
+        .feedback-extension::before {
+            content: "🔍 ";
+        }
+
+        .feedback-correction {
+            background: #fee2e2;
+            border-left: 4px solid #ef4444;
+            padding: 12px;
+            margin: 10px 0;
+            border-radius: 4px;
+        }
+
+        .feedback-correction::before {
+            content: "⚠️ ";
+        }
+
+        .feedback-correction strong:first-of-type {
+            color: #dc2626;
+        }
+
+        .info-box {
+            background: #ede9fe;
+            border-left: 4px solid #7c3aed;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .info-box strong {
+            color: #5b21b6;
+        }
+
+        .equation-box {
+            background: white;
+            border: 2px solid #667eea;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            text-align: center;
+            font-family: 'Courier New', monospace;
+            font-size: 1.1em;
+        }
+
+        .equation-box .equation {
+            margin: 15px 0;
+            color: #667eea;
+            font-weight: bold;
+        }
+
+        .values-table {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            overflow-x: auto;
+        }
+
+        .values-table table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .values-table th {
+            background: #667eea;
+            color: white;
+            padding: 12px;
+            text-align: left;
+        }
+
+        .values-table td {
+            padding: 10px;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .values-table tr:hover {
+            background: #f3f4f6;
+        }
+
+        .mechanism-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .mechanism-card {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+        }
+
+        .mechanism-card h4 {
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .pathology-box {
+            background: #fef2f2;
+            border: 2px solid #dc2626;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .pathology-box h4 {
+            color: #991b1b;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .pathology-box h4::before {
+            content: "🏥";
+            font-size: 1.3em;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 1.1em;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+            display: block;
+            margin: 0 auto;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 7px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 1.1em;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(40, 167, 69, 0.3);
+            display: block;
+            margin: 0 auto;
+        }
+
+        .btn-success:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 7px 20px rgba(40, 167, 69, 0.4);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🫘 Renal Physiology: Advanced Concepts</h1>
+            <p>Self-Explanation Learning for Medical Students</p>
+            <div class="level-badge">Medical Student Level</div>
+        </div>
+
+        <div class="progress-container">
+            <div id="progressBar" class="progress-bar"></div>
+            <div id="contentBox" class="content-box"></div>
+            <button id="nextBtn" class="btn-primary">Continue →</button>
+        </div>
+    </div>
+
+    <script>
+        let currentStep = 0;
+        const totalSteps = 5;
+
+        const steps = [
+            {
+                content: `
+                    <h2>Welcome to Advanced Renal Physiology</h2>
+                    <p>This module uses <strong>self-explanation</strong>, an evidence-based learning strategy that promotes deeper understanding of complex physiological mechanisms.</p>
+                    
+                    <div class="info-box">
+                        <strong>Why Self-Explanation for Medical Students?</strong><br>
+                        Self-explanation has been shown to improve clinical reasoning by encouraging you to:
+                        <ul style="margin-left: 20px; margin-top: 10px; line-height: 1.8;">
+                            <li>Integrate new information with existing pathophysiological frameworks</li>
+                            <li>Identify gaps in mechanistic understanding</li>
+                            <li>Develop causal reasoning essential for diagnosis and treatment</li>
+                            <li>Enhance long-term retention of complex concepts</li>
+                        </ul>
+                    </div>
+
+                    <h3>Learning Objectives:</h3>
+                    <p>By the end of this module, you will be able to:</p>
+                    <ul style="margin-left: 30px; margin-top: 15px; line-height: 2;">
+                        <li>Calculate and interpret glomerular filtration rate using standard equations</li>
+                        <li>Explain the tubuloglomerular feedback mechanism and its clinical significance</li>
+                        <li>Describe the renin-angiotensin-aldosterone system in detail</li>
+                        <li>Analyze acid-base disturbances and renal compensation mechanisms</li>
+                        <li>Apply this knowledge to common clinical scenarios</li>
+                    </ul>
+
+                    <p style="margin-top: 20px;"><strong>Ready to begin?</strong> You'll read clinical-level content, then explain it in your own words to consolidate understanding.</p>
+                `
+            },
+            {
+                content: `
+                    <h2>Step 1: Glomerular Filtration Rate</h2>
+                    
+                    <div class="learning-text">
+                        Glomerular filtration rate (GFR) represents the volume of plasma filtered by the glomeruli per unit time. Normal GFR is approximately 125 mL/min in young adults. GFR is determined by Starling forces: glomerular capillary hydrostatic pressure (~60 mmHg) minus Bowman's capsule pressure (~15 mmHg) and plasma oncotic pressure (~29 mmHg), yielding net filtration pressure of ~16 mmHg.
+                    </div>
+
+                    <div class="equation-box">
+                        <div>Net Filtration Pressure:</div>
+                        <div class="equation">NFP = P<sub>GC</sub> - P<sub>BC</sub> - π<sub>GC</sub></div>
+                    </div>
+
+                    <div class="clinical-pearl">
+                        <h4>Clinical Pearl:</h4>
+                        <p>NSAIDs decrease GFR by inhibiting prostaglandin-mediated afferent arteriole dilation. ACE inhibitors decrease GFR by preventing angiotensin II-mediated efferent arteriole constriction.</p>
+                    </div>
+
+                    <div class="prompt-box">
+                        <h4>Self-Explanation Prompt:</h4>
+                        <p>Explain how Starling forces determine GFR. Why would dehydration decrease GFR?</p>
+                        <div class="response-area">
+                            [Type your explanation here...]
+                        </div>
+                    </div>
+
+                    <div class="example-response">
+                        <h4>Example Self-Explanation:</h4>
+                        <p>"GFR depends on net pressure pushing fluid from glomerular capillaries into Bowman's capsule. In dehydration, blood volume drops, decreasing cardiac output and glomerular capillary pressure, so GFR falls."</p>
+                    </div>
+
+                    <div class="feedback-box">
+                        <h4>System Feedback:</h4>
+                        <div class="feedback-positive">
+                            <strong>Excellent reasoning!</strong> You correctly traced the pathway from dehydration to decreased GFR.
+                        </div>
+                    </div>
+                `
+            },
+            {
+                content: `
+                    <h2>Step 2: Tubuloglomerular Feedback</h2>
+                    
+                    <div class="learning-text">
+                        Tubuloglomerular feedback maintains constant GFR. The macula densa senses NaCl in tubular fluid. Increased NaCl triggers adenosine release, constricting the afferent arteriole and decreasing GFR.
+                    </div>
+
+                    <div class="mechanism-grid">
+                        <div class="mechanism-card">
+                            <h4>↑ GFR</h4>
+                            <p>↑ NaCl → adenosine → afferent constriction → ↓ GFR</p>
+                        </div>
+                        <div class="mechanism-card">
+                            <h4>↓ GFR</h4>
+                            <p>↓ NaCl → ↓ adenosine → afferent dilation → ↑ GFR</p>
+                        </div>
+                    </div>
+
+                    <div class="pathology-box">
+                        <h4>Pathophysiology:</h4>
+                        <p>In ATN, damaged tubules can't reabsorb sodium, inappropriately triggering TGF and worsening GFR.</p>
+                    </div>
+
+                    <div class="prompt-box">
+                        <h4>Self-Explanation Prompt:</h4>
+                        <p>Explain TGF. Why is macula densa location important?</p>
+                        <div class="response-area">
+                            [Type your explanation...]
+                        </div>
+                    </div>
+
+                    <div class="example-response">
+                        <h4>Example Self-Explanation:</h4>
+                        <p>"TGF is local feedback. Macula densa samples fluid after reabsorption to assess tubular load. The kidneys use active transport to prevent loss during high GFR."</p>
+                    </div>
+
+                    <div class="feedback-box">
+                        <h4>System Feedback:</h4>
+                        <div class="feedback-positive">
+                            <strong>Good understanding!</strong> You identified the sensor and location correctly.
+                        </div>
+                        <div class="feedback-correction">
+                            <strong>Refinement needed:</strong> TGF works by preventing excessive filtration through vasoconstriction, not by increasing active transport after filtration.
+                        </div>
+                    </div>
+                `
+            },
+            {
+                content: `
+                    <h2>Step 3: RAAS System</h2>
+                    
+                    <div class="learning-text">
+                        Renin-angiotensin-aldosterone system regulates blood pressure. Renin converts angiotensinogen to angiotensin I. ACE converts it to angiotensin II, which constricts vessels (especially efferent arteriole), stimulates aldosterone and ADH, and promotes sodium reabsorption.
+                    </div>
+
+                    <div class="mechanism-grid">
+                        <div class="mechanism-card">
+                            <h4>Angiotensin II</h4>
+                            <p>• Efferent constriction<br>• Aldosterone ↑<br>• ADH ↑<br>• Na+ reabsorption ↑</p>
+                        </div>
+                        <div class="mechanism-card">
+                            <h4>Aldosterone</h4>
+                            <p>• Na+ reabsorption ↑<br>• K+ secretion ↑<br>• Volume expansion</p>
+                        </div>
+                    </div>
+
+                    <div class="clinical-pearl">
+                        <h4>Clinical Pearl:</h4>
+                        <p>ACE inhibitors can cause acute GFR decline in bilateral renal artery stenosis where efferent constriction is needed to maintain GFR.</p>
+                    </div>
+
+                    <div class="prompt-box">
+                        <h4>Self-Explanation Prompt:</h4>
+                        <p>Why does angiotensin II preferentially constrict the efferent arteriole? Why does bilateral stenosis cause hypertension?</p>
+                        <div class="response-area">
+                            [Type your explanation...]
+                        </div>
+                    </div>
+
+                    <div class="example-response">
+                        <h4>Example Self-Explanation:</h4>
+                        <p>"Efferent constriction maintains glomerular pressure when systemic pressure drops - like closing an exit valve. In bilateral stenosis, both kidneys activate RAAS causing hypertension, but in unilateral stenosis the normal kidney compensates."</p>
+                    </div>
+
+                    <div class="feedback-box">
+                        <h4>System Feedback:</h4>
+                        <div class="feedback-positive">
+                            <strong>Excellent analogy!</strong> Your "exit valve" comparison shows strong understanding of hemodynamics.
+                        </div>
+                        <div class="feedback-positive">
+                            <strong>Sophisticated reasoning!</strong> You understood why both kidneys must be affected for sustained hypertension.
+                        </div>
+                    </div>
+                `
+            },
+            {
+                content: `
+                    <h2>🎉 Congratulations!</h2>
+                    
+                    <div class="info-box">
+                        <strong>Concepts Mastered:</strong>
+                        <ul style="margin-left: 20px; margin-top: 10px;">
+                            <li>GFR and Starling forces</li>
+                            <li>Tubuloglomerular feedback</li>
+                            <li>RAAS cascade</li>
+                        </ul>
+                    </div>
+
+                    <div class="clinical-pearl">
+                        <h4>Clinical Integration:</h4>
+                        <p>Heart failure patient: ↓ cardiac output → ↓ renal perfusion → TGF attempts compensation → RAAS activation → sodium retention → worsening volume overload</p>
+                    </div>
+
+                    <div class="example-response">
+                        <h4>Self-Explanation Benefits:</h4>
+                        <ul style="margin-left: 20px; margin-top: 10px;">
+                            <li>✓ Built integrated mental models</li>
+                            <li>✓ Developed causal reasoning</li>
+                            <li>✓ Corrected misconceptions</li>
+                        </ul>
+                    </div>
+
+                    <div class="values-table">
+                        <h4>Reference Values:</h4>
+                        <table>
+                            <tr><th>Parameter</th><th>Normal</th></tr>
+                            <tr><td>GFR</td><td>90-120 mL/min</td></tr>
+                            <tr><td>Creatinine</td><td>0.6-1.2 mg/dL</td></tr>
+                            <tr><td>BUN</td><td>7-20 mg/dL</td></tr>
+                        </table>
+                    </div>
+                `
+            }
+        ];
+
+        function renderProgressBar() {
+            const progressBar = document.getElementById('progressBar');
+            let html = '';
+            
+            for (let i = 0; i < totalSteps; i++) {
+                const activeClass = i <= currentStep ? 'active' : 'inactive';
+                html += `
+                    <div class="progress-step">
+                        <div class="step-circle ${activeClass}">${i + 1}</div>
+                        ${i < totalSteps - 1 ? `<div class="step-line ${i < currentStep ? 'active' : 'inactive'}"></div>` : ''}
+                    </div>
+                `;
+            }
+            
+            progressBar.innerHTML = html;
+        }
+
+        function renderContent() {
+            const contentBox = document.getElementById('contentBox');
+            contentBox.innerHTML = steps[currentStep].content;
+            
+            const nextBtn = document.getElementById('nextBtn');
+            if (currentStep === totalSteps - 1) {
+                nextBtn.innerHTML = 'Start Over';
+                nextBtn.className = 'btn-success';
+            } else {
+                nextBtn.innerHTML = 'Continue →';
+                nextBtn.className = 'btn-primary';
+            }
+        }
+
+        function nextStep() {
+            if (currentStep < totalSteps - 1) {
+                currentStep++;
+                renderProgressBar();
+                renderContent();
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        }
+
+        function resetDemo() {
+            currentStep = 0;
+            renderProgressBar();
+            renderContent();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        document.getElementById('nextBtn').addEventListener('click', function() {
+            if (currentStep === totalSteps - 1) {
+                resetDemo();
+            } else {
+                nextStep();
+            }
+        });
+
+        // Initialize
+        renderProgressBar();
+        renderContent();
+    </script>
+</body>
+</html>
