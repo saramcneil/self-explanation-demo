@@ -1,0 +1,888 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Self-Explanation Demo: Cardiac Physiology for Medical Students</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #dc2626 0%, #991b1b 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .header .level-badge {
+            display: inline-block;
+            background: rgba(255,255,255,0.2);
+            padding: 8px 20px;
+            border-radius: 20px;
+            margin-top: 10px;
+            font-weight: bold;
+        }
+
+        .progress-container {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .progress-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            position: relative;
+        }
+
+        .progress-step {
+            display: flex;
+            align-items: center;
+            flex: 1;
+        }
+
+        .step-circle {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.2em;
+            transition: all 0.3s ease;
+            z-index: 2;
+        }
+
+        .step-circle.active {
+            background: linear-gradient(135deg, #dc2626 0%, #991b1b 100%);
+            color: white;
+            box-shadow: 0 5px 15px rgba(220, 38, 38, 0.4);
+        }
+
+        .step-circle.inactive {
+            background: #e0e0e0;
+            color: #999;
+        }
+
+        .step-line {
+            flex: 1;
+            height: 4px;
+            margin: 0 10px;
+            transition: all 0.3s ease;
+        }
+
+        .step-line.active {
+            background: linear-gradient(90deg, #dc2626 0%, #991b1b 100%);
+        }
+
+        .step-line.inactive {
+            background: #e0e0e0;
+        }
+
+        .content-box {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 30px;
+            margin-bottom: 20px;
+            line-height: 1.8;
+        }
+
+        .content-box h2 {
+            color: #dc2626;
+            margin-bottom: 20px;
+            font-size: 1.8em;
+        }
+
+        .content-box h3 {
+            color: #991b1b;
+            margin-top: 25px;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+
+        .learning-text {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 4px solid #dc2626;
+            margin: 20px 0;
+            font-size: 1.05em;
+        }
+
+        .clinical-pearl {
+            background: #fef3c7;
+            border: 2px solid #f59e0b;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .clinical-pearl h4 {
+            color: #92400e;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .clinical-pearl h4::before {
+            content: "💊";
+            font-size: 1.3em;
+        }
+
+        .prompt-box {
+            background: #fff3cd;
+            border: 2px solid #ffc107;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .prompt-box h4 {
+            color: #856404;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .prompt-box h4::before {
+            content: "💭";
+            font-size: 1.3em;
+        }
+
+        .response-area {
+            background: white;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            padding: 15px;
+            min-height: 100px;
+            margin-top: 15px;
+            font-style: italic;
+            color: #666;
+        }
+
+        .example-response {
+            background: #d4edda;
+            border: 2px solid #28a745;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .example-response h4 {
+            color: #155724;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .example-response h4::before {
+            content: "✓";
+            font-size: 1.3em;
+            background: #28a745;
+            color: white;
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .feedback-box {
+            background: #e3f2fd;
+            border: 2px solid #2196F3;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .feedback-box h4 {
+            color: #1565c0;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .feedback-box h4::before {
+            content: "🤖";
+            font-size: 1.3em;
+        }
+
+        .feedback-positive {
+            background: #f0f9ff;
+            border-left: 4px solid #0ea5e9;
+            padding: 12px;
+            margin: 10px 0;
+            border-radius: 4px;
+        }
+
+        .feedback-positive::before {
+            content: "✨ ";
+        }
+
+        .feedback-suggestion {
+            background: #fef3c7;
+            border-left: 4px solid #f59e0b;
+            padding: 12px;
+            margin: 10px 0;
+            border-radius: 4px;
+        }
+
+        .feedback-suggestion::before {
+            content: "💡 ";
+        }
+
+        .feedback-extension {
+            background: #f3e8ff;
+            border-left: 4px solid #a855f7;
+            padding: 12px;
+            margin: 10px 0;
+            border-radius: 4px;
+        }
+
+        .feedback-extension::before {
+            content: "🔍 ";
+        }
+
+        .feedback-correction {
+            background: #fee2e2;
+            border-left: 4px solid #ef4444;
+            padding: 12px;
+            margin: 10px 0;
+            border-radius: 4px;
+        }
+
+        .feedback-correction::before {
+            content: "⚠️ ";
+        }
+
+        .feedback-correction strong:first-of-type {
+            color: #dc2626;
+        }
+
+        .info-box {
+            background: #fee2e2;
+            border-left: 4px solid #dc2626;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .info-box strong {
+            color: #991b1b;
+        }
+
+        .equation-box {
+            background: white;
+            border: 2px solid #dc2626;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            text-align: center;
+            font-family: 'Courier New', monospace;
+            font-size: 1.1em;
+        }
+
+        .equation-box .equation {
+            margin: 15px 0;
+            color: #dc2626;
+            font-weight: bold;
+        }
+
+        .values-table {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            overflow-x: auto;
+        }
+
+        .values-table table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .values-table th {
+            background: #dc2626;
+            color: white;
+            padding: 12px;
+            text-align: left;
+        }
+
+        .values-table td {
+            padding: 10px;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .values-table tr:hover {
+            background: #f3f4f6;
+        }
+
+        .mechanism-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .mechanism-card {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 4px solid #dc2626;
+        }
+
+        .mechanism-card h4 {
+            color: #dc2626;
+            margin-bottom: 10px;
+        }
+
+        .pathology-box {
+            background: #fef2f2;
+            border: 2px solid #dc2626;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .pathology-box h4 {
+            color: #991b1b;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .pathology-box h4::before {
+            content: "🏥";
+            font-size: 1.3em;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #dc2626 0%, #991b1b 100%);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 1.1em;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(220, 38, 38, 0.3);
+            display: block;
+            margin: 0 auto;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 7px 20px rgba(220, 38, 38, 0.4);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 1.1em;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(40, 167, 69, 0.3);
+            display: block;
+            margin: 0 auto;
+        }
+
+        .btn-success:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 7px 20px rgba(40, 167, 69, 0.4);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>❤️ Cardiac Physiology: Advanced Concepts</h1>
+            <p>Self-Explanation Learning for Medical Students</p>
+            <div class="level-badge">Medical Student Level</div>
+        </div>
+
+        <div class="progress-container">
+            <div id="progressBar" class="progress-bar"></div>
+            <div id="contentBox" class="content-box"></div>
+            <button id="nextBtn" class="btn-primary">Continue →</button>
+        </div>
+    </div>
+
+    <script>
+        let currentStep = 0;
+        const totalSteps = 5;
+
+        const steps = [
+            {
+                content: `
+                    <h2>Welcome to Advanced Cardiac Physiology</h2>
+                    <p>This module uses <strong>self-explanation</strong> to help you master some of the most challenging concepts in cardiovascular physiology.</p>
+                    
+                    <div class="info-box">
+                        <strong>Why Cardiac Physiology Is Challenging:</strong><br>
+                        The cardiovascular system requires understanding:
+                        <ul style="margin-left: 20px; margin-top: 10px; line-height: 1.8;">
+                            <li>Dynamic pressure-volume relationships that change with each heartbeat</li>
+                            <li>Electrical-mechanical coupling at the cellular and organ level</li>
+                            <li>Integration of multiple feedback systems (baroreceptor, Frank-Starling, RAAS)</li>
+                            <li>Complex pathophysiology where compensatory mechanisms often worsen outcomes</li>
+                        </ul>
+                    </div>
+
+                    <h3>Learning Objectives:</h3>
+                    <p>By the end of this module, you will be able to:</p>
+                    <ul style="margin-left: 30px; margin-top: 15px; line-height: 2;">
+                        <li>Interpret pressure-volume loops and identify phases of the cardiac cycle</li>
+                        <li>Explain the Frank-Starling mechanism and its clinical limitations</li>
+                        <li>Differentiate systolic vs. diastolic heart failure using hemodynamic principles</li>
+                        <li>Predict how pharmacologic interventions affect cardiac performance</li>
+                        <li>Apply these concepts to common clinical scenarios</li>
+                    </ul>
+
+                    <p style="margin-top: 20px;"><strong>Ready to begin?</strong> You'll work through complex concepts step-by-step, explaining them in your own words to build deep understanding.</p><p><strong>For the demo</strong>, on the following screens you will see content, then a Clinical Pearl (content take-away), then a self-explanation prompt with an answer box (which is not active in this demo), then an example of self-explanation content, and finally system feedback on the self-explanation. In the real module, these would be on separate screens. In addition, this demo does not have animation or graphics that would be used in the real module.</p>
+                `
+            },
+            {
+                content: `
+                    <h2>Step 1: The Cardiac Cycle and Pressure-Volume Loops</h2>
+                    
+                    <div class="learning-text">
+                        The cardiac cycle can be visualized as a pressure-volume (PV) loop, which plots left ventricular pressure against left ventricular volume throughout one heartbeat. The loop consists of four phases: (1) Isovolumetric contraction - mitral valve closes, aortic valve still closed, pressure rises rapidly with no volume change; (2) Ejection - aortic valve opens when LV pressure exceeds aortic pressure, volume decreases as blood is ejected; (3) Isovolumetric relaxation - aortic valve closes, mitral valve still closed, pressure falls with no volume change; (4) Filling - mitral valve opens when LV pressure falls below LA pressure, volume increases. The width of the loop represents stroke volume (end-diastolic volume minus end-systolic volume), and the area enclosed by the loop represents stroke work (external work performed by the ventricle).
+                    </div>
+
+                    <div class="mechanism-grid">
+                        <div class="mechanism-card">
+                            <h4>Phase 1: Isovolumetric Contraction</h4>
+                            <p>All valves closed<br>Pressure ↑<br>Volume unchanged<br>Generates tension</p>
+                        </div>
+                        <div class="mechanism-card">
+                            <h4>Phase 2: Ejection</h4>
+                            <p>Aortic valve open<br>Pressure high<br>Volume ↓<br>Blood ejected</p>
+                        </div>
+                        <div class="mechanism-card">
+                            <h4>Phase 3: Isovolumetric Relaxation</h4>
+                            <p>All valves closed<br>Pressure ↓<br>Volume unchanged<br>Ventricle relaxes</p>
+                        </div>
+                        <div class="mechanism-card">
+                            <h4>Phase 4: Filling</h4>
+                            <p>Mitral valve open<br>Pressure low<br>Volume ↑<br>Chamber fills</p>
+                        </div>
+                    </div>
+
+                    <div class="clinical-pearl">
+                        <h4>Clinical Pearl:</h4>
+                        <p>The shape of the PV loop changes predictably with cardiac pathology. Increased afterload (e.g., aortic stenosis, hypertension) shifts the loop leftward and increases end-systolic volume. Increased preload (volume overload) shifts the loop rightward. Decreased contractility (heart failure) reduces the slope of the end-systolic pressure-volume relationship (ESPVR) and decreases stroke volume.</p>
+                    </div>
+
+                    <div class="prompt-box">
+                        <h4>Self-Explanation Prompt:</h4>
+                        <p>Explain why the phases are called "isovolumetric." What determines when valves open and close? How does the area of the PV loop relate to cardiac work?</p>
+                        <div class="response-area">
+                            [Type your explanation here...]
+                        </div>
+                    </div>
+
+                    <div class="example-response">
+                        <h4>Example Self-Explanation:</h4>
+                        <p>"The phases are called isovolumetric because volume stays constant - both valves are closed so blood can't enter or leave the ventricle, even though pressure is changing. Valves open and close based on pressure gradients: when LV pressure exceeds aortic pressure, the aortic valve opens; when LV pressure falls below LA pressure, the mitral valve opens. The area inside the loop represents work because work = pressure × volume change integrated over the cycle. A bigger loop means more work is being done to eject blood against resistance."</p>
+                    </div>
+
+                    <div class="feedback-box">
+                        <h4>System Feedback:</h4>
+                        
+                        <div class="feedback-positive">
+                            <strong>Excellent mechanistic understanding!</strong> You correctly identified that "isovolumetric" means constant volume because both valves are closed, preventing any blood movement.
+                        </div>
+                        
+                        <div class="feedback-positive">
+                            <strong>Strong grasp of pressure gradients:</strong> Your explanation that valves are passive structures controlled by pressure differences shows you understand hemodynamics rather than just memorizing valve timing.
+                        </div>
+                        
+                        <div class="feedback-positive">
+                            <strong>Solid integration of physics:</strong> Connecting loop area to work (pressure × volume) demonstrates quantitative reasoning essential for understanding cardiac energetics.
+                        </div>
+                        
+                        <div class="feedback-extension">
+                            <strong>Extension question:</strong> If a patient develops acute severe mitral regurgitation, how would the PV loop change? Think about what happens during systole when the mitral valve should be closed but isn't.
+                        </div>
+                    </div>
+                `
+            },
+            {
+                content: `
+                    <h2>Step 2: The Frank-Starling Mechanism</h2>
+                    
+                    <div class="learning-text">
+                        The Frank-Starling mechanism states that the force of ventricular contraction is directly proportional to the initial length of cardiac muscle fibers (preload). At the cellular level, increased stretch optimizes the overlap between actin and myosin filaments and increases calcium sensitivity of troponin C. Clinically, this means that increased venous return leads to increased stroke volume - the heart automatically adjusts its output to match venous return without requiring neural input. This is why the Frank-Starling curve plots stroke volume (or cardiac output) against preload (measured as end-diastolic volume, end-diastolic pressure, or central venous pressure). However, this relationship is not infinite - beyond optimal stretch, the sarcomeres become overstretched, actin-myosin overlap decreases, and contractile force declines (the descending limb, rarely seen clinically). Importantly, the position and slope of the Frank-Starling curve can shift: increased contractility shifts the curve upward and leftward, while decreased contractility (heart failure) shifts it downward and rightward.
+                    </div>
+
+                    <div class="equation-box">
+                        <div>Key Relationships:</div>
+                        <div class="equation">
+                            Stroke Volume = EDV - ESV<br>
+                            Cardiac Output = SV × Heart Rate<br>
+                            Ejection Fraction = (SV / EDV) × 100%
+                        </div>
+                    </div>
+
+                    <div class="pathology-box">
+                        <h4>Pathophysiology Connection:</h4>
+                        <p><strong>Acute Decompensated Heart Failure:</strong> The failing heart operates on a depressed Frank-Starling curve. To maintain adequate cardiac output, venous pressure increases (shifting rightward along the curve) - but this causes pulmonary congestion. Diuretics reduce preload, moving the patient leftward on their curve, which relieves congestion but may reduce cardiac output if they're already on the flat part of the curve. This explains why aggressive diuresis can cause cardiorenal syndrome.<br><br>
+                        <strong>Athletic Heart:</strong> Athletes have enhanced Frank-Starling curves (shifted up and left) due to ventricular hypertrophy and improved contractility, allowing high cardiac output at lower filling pressures.</p>
+                    </div>
+
+                    <div class="prompt-box">
+                        <h4>Self-Explanation Prompt:</h4>
+                        <p>Explain why increased preload increases contractility at the molecular level. Why can't you just keep increasing preload infinitely to increase cardiac output? How does this mechanism help during exercise?</p>
+                        <div class="response-area">
+                            [Consider both molecular and clinical perspectives...]
+                        </div>
+                    </div>
+
+                    <div class="example-response">
+                        <h4>Example Self-Explanation:</h4>
+                        <p>"At the molecular level, stretching the sarcomere optimizes actin-myosin overlap so more cross-bridges can form, and it increases calcium binding to troponin C. But if you stretch too far, the filaments pull apart and overlap decreases, so force drops - that's the descending limb. During exercise, venous return increases due to muscle pump and venoconstriction, which increases preload. The Frank-Starling mechanism automatically increases stroke volume to match this increased return, without needing the nervous system to directly control each heartbeat. This is especially important because it helps balance output between the right and left ventricles - if the RV suddenly pumps more, the LV will automatically match it when that blood arrives."</p>
+                    </div>
+
+                    <div class="feedback-box">
+                        <h4>System Feedback:</h4>
+                        
+                        <div class="feedback-positive">
+                            <strong>Outstanding molecular explanation!</strong> You correctly identified both mechanisms: optimal sarcomere overlap and increased calcium sensitivity. This shows you understand the link between structure and function.
+                        </div>
+                        
+                        <div class="feedback-positive">
+                            <strong>Excellent clinical insight!</strong> Your explanation of ventricular matching is sophisticated - many students miss that the Frank-Starling mechanism prevents blood from backing up when one ventricle briefly pumps more than the other.
+                        </div>
+                        
+                        <div class="feedback-positive">
+                            <strong>Strong integration of exercise physiology:</strong> Connecting muscle pump and venoconstriction to increased preload shows you understand how multiple systems work together.
+                        </div>
+                        
+                        <div class="feedback-extension">
+                            <strong>Extension question:</strong> In heart failure with preserved ejection fraction (HFpEF), the Frank-Starling curve is shifted downward but the ventricle is very stiff. Why might these patients develop pulmonary edema with even small increases in blood volume (e.g., IV fluids)?
+                        </div>
+                    </div>
+                `
+            },
+            {
+                content: `
+                    <h2>Step 3: Systolic vs. Diastolic Heart Failure</h2>
+                    
+                    <div class="learning-text">
+                        Heart failure is classified based on ejection fraction and underlying pathophysiology. Heart failure with reduced ejection fraction (HFrEF, systolic dysfunction) occurs when the ventricle cannot contract adequately - ejection fraction is typically below 40%. The problem is impaired systolic function: the ventricle dilates, end-systolic volume increases dramatically, and although end-diastolic volume also increases (via Frank-Starling), stroke volume decreases. On a PV loop, the ESPVR slope decreases (reduced contractility) and the loop is wider and shifted rightward. Heart failure with preserved ejection fraction (HFpEF, diastolic dysfunction) occurs when the ventricle cannot relax or fill adequately - ejection fraction is normal or near-normal (>50%) but cardiac output is still reduced. The ventricle is stiff and non-compliant, requiring high filling pressures. End-diastolic pressure is elevated but end-diastolic volume is normal or reduced. On a PV loop, the diastolic portion shifts leftward and upward (steep diastolic pressure-volume relationship), indicating poor compliance.
+                    </div>
+
+                    <div class="mechanism-grid">
+                        <div class="mechanism-card">
+                            <h4>HFrEF (Systolic)</h4>
+                            <p>• Dilated ventricle<br>• ↑ ESV, ↑ EDV<br>• ↓ EF (&lt;40%)<br>• ↓ Contractility<br>• Volume overload pattern</p>
+                        </div>
+                        <div class="mechanism-card">
+                            <h4>HFpEF (Diastolic)</h4>
+                            <p>• Stiff ventricle<br>• Normal/↓ EDV<br>• Normal EF (&gt;50%)<br>• ↑ Filling pressure<br>• Pressure overload pattern</p>
+                        </div>
+                    </div>
+
+                    <div class="clinical-pearl">
+                        <h4>Clinical Pearl:</h4>
+                        <p><strong>Treatment differs dramatically:</strong> HFrEF responds to drugs that reduce afterload (ACE inhibitors, ARBs) and enhance contractility (beta-blockers paradoxically improve outcomes through remodeling). Diuretics relieve congestion in both. However, HFpEF management is trickier - aggressive diuresis can drop preload too much (since the stiff ventricle needs higher filling pressure), and drugs that improve HFrEF don't consistently help HFpEF. Rate control is crucial in HFpEF because diastolic filling time is critical when the ventricle is stiff - tachycardia severely reduces filling time and worsens cardiac output.</p>
+                    </div>
+
+                    <div class="pathology-box">
+                        <h4>Pathophysiology Connection:</h4>
+                        <p><strong>Why EF can be misleading:</strong> A patient could have EF = 50% with either: (1) Normal heart: EDV = 120 mL, ESV = 60 mL, SV = 60 mL; or (2) Dilated cardiomyopathy: EDV = 300 mL, ESV = 150 mL, SV = 150 mL. Despite the same EF, patient #2 has severe systolic dysfunction with massive chamber dilation. This is why ESV is sometimes a better marker of systolic function than EF alone.</p>
+                    </div>
+
+                    <div class="prompt-box">
+                        <h4>Self-Explanation Prompt:</h4>
+                        <p>Explain why a patient can have heart failure with normal ejection fraction. Why would these patients be particularly sensitive to atrial fibrillation? How would you expect the PV loop to differ between HFrEF and HFpEF?</p>
+                        <div class="response-area">
+                            [Think about the different mechanisms of pump failure...]
+                        </div>
+                    </div>
+
+                    <div class="example-response">
+                        <h4>Example Self-Explanation:</h4>
+                        <p>"HFpEF patients have normal EF because their ventricle can empty normally - the problem is that it's too stiff to fill properly. Since EDV is reduced, even with normal ejection percentage, the absolute stroke volume (the amount of blood actually pumped) is low. These patients are sensitive to AFib because they lose atrial kick - normally the atrial contraction at the end of diastole contributes 20-30% of ventricular filling, but when you have a stiff ventricle that's hard to fill anyway, losing that atrial contribution significantly drops cardiac output. On PV loops, HFrEF would show a wide loop shifted right with decreased ESPVR slope, while HFpEF would show a narrow loop with the filling phase shifted up and left, indicating it takes much higher pressure to fill the ventricle to the same volume. The main issue is the excessive increase in diastolic pressure needed to fill the chamber."</p>
+                    </div>
+
+                    <div class="feedback-box">
+                        <h4>System Feedback:</h4>
+                        
+                        <div class="feedback-correction">
+                            <strong>Clarification needed:</strong> You stated the "main issue is excessive increase in diastolic pressure" which is correct, but this is a <strong>consequence</strong> of the stiff ventricle, not the primary problem. The primary problem is <strong>decreased ventricular compliance</strong> (stiffness), which then causes the high filling pressures. The distinction matters clinically: we can lower pressures with diuretics, but that doesn't fix the underlying compliance problem and may worsen cardiac output.
+                        </div>
+                        
+                        <div class="feedback-positive">
+                            <strong>Excellent AFib connection!</strong> Your explanation of why atrial kick loss is particularly devastating in HFpEF shows sophisticated clinical reasoning. The quantification (20-30% of filling) adds precision.
+                        </div>
+                        
+                        <div class="feedback-positive">
+                            <strong>Strong PV loop visualization!</strong> You accurately contrasted the wide rightward HFrEF loop with the narrow upward-shifted HFpEF loop, demonstrating you can translate pathophysiology into graphical representations.
+                        </div>
+                        
+                        <div class="feedback-extension">
+                            <strong>Extension question:</strong> Given that HFpEF involves increased chamber stiffness, what cellular and extracellular changes might cause this? (Hint: Consider what makes the ventricle "stiffer" - think about fibrosis, hypertrophy patterns, and titin isoforms.)
+                        </div>
+                    </div>
+                `
+            },
+            {
+                content: `
+                    <h2>Step 4: Afterload and Its Clinical Implications</h2>
+                    
+                    <div class="learning-text">
+                        Afterload is the resistance the ventricle must overcome to eject blood, clinically approximated by systemic vascular resistance and aortic pressure. According to the Law of Laplace (Wall Stress = Pressure × Radius / 2 × Wall Thickness), afterload increases with higher pressure and larger chamber radius, but decreases with thicker walls. This explains ventricular remodeling: chronic pressure overload (hypertension, aortic stenosis) causes concentric hypertrophy (walls thicken, normalizing wall stress), while volume overload (mitral regurgitation, heart failure) causes eccentric hypertrophy (chamber dilates). Increased afterload has profound effects on cardiac performance: it increases myocardial oxygen demand, reduces stroke volume (shifting up the end-systolic pressure-volume relationship), and can trigger a vicious cycle in heart failure where reduced cardiac output activates compensatory mechanisms (sympathetic tone, RAAS) that further increase afterload. The relationship between afterload and cardiac output is inverse in the failing heart but relatively flat in the normal heart due to compensatory mechanisms.
+                    </div>
+
+                    <div class="equation-box">
+                        <div>Law of Laplace:</div>
+                        <div class="equation">
+                            Wall Stress = (P × r) / (2 × h)
+                        </div>
+                        <div style="margin-top: 10px; font-size: 0.9em; color: #666;">
+                            P = intraventricular pressure<br>
+                            r = ventricular radius<br>
+                            h = wall thickness
+                        </div>
+                    </div>
+
+                    <div class="clinical-pearl">
+                        <h4>Clinical Pearl:</h4>
+                        <p><strong>Afterload reduction is a cornerstone of HFrEF treatment:</strong> ACE inhibitors, ARBs, and hydralazine reduce systemic vascular resistance, allowing the failing ventricle to eject more blood with less work. This increases stroke volume, reduces chamber dilation (reducing wall stress via Law of Laplace), and decreases myocardial oxygen demand. However, excessive afterload reduction causes hypotension and inadequate organ perfusion - there's a therapeutic window. Beta-blockers seem paradoxical (they reduce contractility) but improve outcomes by preventing adverse remodeling and reducing myocardial oxygen demand.</p>
+                    </div>
+
+                    <div class="pathology-box">
+                        <h4>Pathophysiology Connection:</h4>
+                        <p><strong>Aortic Stenosis:</strong> Progressively increasing afterload causes concentric LV hypertrophy. Initially compensatory (normalizes wall stress), but eventually the hypertrophy becomes excessive, coronary perfusion becomes inadequate (supply-demand mismatch), diastolic dysfunction develops, and the ventricle finally fails. PV loops show progressively higher pressures during ejection phase with maintained stroke volume until late stages.<br><br>
+                        <strong>Mitral Regurgitation:</strong> The failing ventricle can eject into the low-resistance LA, artificially maintaining normal-appearing EF despite severe systolic dysfunction. When the mitral valve is surgically repaired, EF may drop dramatically as the ventricle now must eject entirely into the high-resistance aorta.</p>
+                    </div>
+
+                    <div class="prompt-box">
+                        <h4>Self-Explanation Prompt:</h4>
+                        <p>Explain why the Law of Laplace matters clinically. Why does a dilated heart face higher afterload even if blood pressure is normal? How does afterload reduction help heart failure patients?</p>
+                        <div class="response-area">
+                            [Connect molecular, cellular, and organ-level concepts...]
+                        </div>
+                    </div>
+
+                    <div class="example-response">
+                        <h4>Example Self-Explanation:</h4>
+                        <p>"The Law of Laplace shows that wall stress depends on both pressure and radius. So if the ventricle dilates in heart failure, each myocyte has to generate more force to create the same pressure, even if blood pressure is normal. This is why dilated hearts struggle - they're fighting against geometric disadvantage. Wall thickening (hypertrophy) helps compensate by reducing wall stress, but if it becomes excessive, it causes other problems like diastolic dysfunction and ischemia. Afterload reduction helps heart failure by reducing the resistance the ventricle pumps against, which increases stroke volume. This also helps the chamber remodel back to smaller size, which further reduces wall stress via Laplace's law - a beneficial cycle. Plus, reduced afterload means less oxygen demand, which is important because failing hearts often have supply-demand mismatch."</p>
+                    </div>
+
+                    <div class="feedback-box">
+                        <h4>System Feedback:</h4>
+                        
+                        <div class="feedback-positive">
+                            <strong>Outstanding integration of Laplace's Law!</strong> You correctly explained that dilated ventricles face higher wall stress at the same blood pressure due to increased radius. This geometric insight is crucial for understanding heart failure progression.
+                        </div>
+                        
+                        <div class="feedback-positive">
+                            <strong>Excellent recognition of beneficial cycles!</strong> Your explanation that afterload reduction → increased SV → reduced chamber size → reduced wall stress shows you understand positive feedback loops that can be leveraged therapeutically.
+                        </div>
+                        
+                        <div class="feedback-positive">
+                            <strong>Strong oxygen supply-demand reasoning:</strong> Connecting reduced afterload to reduced oxygen consumption shows you're thinking about myocardial energetics, not just hemodynamics.
+                        </div>
+                        
+                        <div class="feedback-extension">
+                            <strong>Extension question:</strong> Consider why aortic stenosis patients often present with angina even with normal coronary arteries. Think about how concentric hypertrophy affects the oxygen supply-demand balance. (Hint: Consider both increased demand and decreased supply per gram of tissue.)
+                        </div>
+                    </div>
+                `
+            },
+            {
+                content: `
+                    <h2>🎉 Congratulations! You've Mastered Advanced Cardiac Physiology</h2>
+                    
+                    <div class="info-box">
+                        <strong>Key Concepts Mastered:</strong><br>
+                        Through self-explanation, you've developed deep understanding of:
+                        <ul style="margin-left: 20px; margin-top: 10px; line-height: 1.8;">
+                            <li>Pressure-volume loops and the four phases of the cardiac cycle</li>
+                            <li>Frank-Starling mechanism from molecular to clinical levels</li>
+                            <li>Systolic vs. diastolic heart failure pathophysiology</li>
+                            <li>Afterload and the Law of Laplace in cardiac remodeling</li>
+                            <li>Integration of these concepts in clinical decision-making</li>
+                        </ul>
+                    </div>
+
+                    <h3>Clinical Integration: Putting It All Together</h3>
+                    <div class="clinical-pearl">
+                        <h4>Complex Clinical Scenario:</h4>
+                        <p>A 65-year-old with dilated cardiomyopathy presents in acute decompensated heart failure:</p>
+                        <ul style="margin-left: 20px; margin-top: 10px; line-height: 1.8;">
+                            <li><strong>Frank-Starling:</strong> Operating on depressed curve → high preload needed to maintain CO → pulmonary congestion</li>
+                            <li><strong>Afterload:</strong> Dilated ventricle → high wall stress (Laplace) → reduced ejection despite normal BP</li>
+                            <li><strong>PV Loop:</strong> Wide, rightward-shifted with reduced ESPVR slope → low stroke volume, high ESV</li>
+                            <li><strong>Treatment strategy:</strong> Diuretics (reduce preload/congestion), ACE inhibitors (reduce afterload), beta-blockers (prevent remodeling)</li>
+                            <li><strong>Monitoring:</strong> Watch for cardiorenal syndrome if diuresis too aggressive (falling off flat part of F-S curve)</li>
+                        </ul>
+                    </div>
+
+                    <h3>The Power of Self-Explanation in Learning Cardiac Physiology</h3>
+                    <div class="example-response">
+                        <h4>What You've Accomplished:</h4>
+                        <p>By actively explaining these complex mechanisms in your own words, you've:</p>
+                        <ul style="margin-left: 20px; margin-top: 10px; line-height: 1.8;">
+                            <li>✓ Built integrated mental models connecting molecular, cellular, and organ-level function</li>
+                            <li>✓ Developed the ability to predict how interventions affect cardiac performance</li>
+                            <li>✓ Learned to recognize and correct common misconceptions</li>
+                            <li>✓ Created durable understanding rather than superficial memorization</li>
+                            <li>✓ Practiced clinical reasoning essential for patient care</li>
+                        </ul>
+                    </div>
+
+                    <h3>Next Steps in Your Cardiovascular Learning</h3>
+                    <div class="pathology-box">
+                        <h4>Recommended Practice:</h4>
+                        <p><strong>Draw PV loops:</strong> For every cardiac pathology you learn, sketch how the PV loop would change. This forces you to think mechanistically about what's happening at each phase of the cardiac cycle.</p>
+                        <p style="margin-top: 15px;"><strong>Apply to cases:</strong> When you see patients with heart failure, arrhythmias, or valvular disease, mentally walk through: Where are they on their Frank-Starling curve? What's their afterload? How would you expect their PV loop to look?</p>
+                        <p style="margin-top: 15px;"><strong>Predict drug effects:</strong> Before giving any cardiovascular medication, predict how it will affect preload, afterload, contractility, and heart rate - then predict the resulting change in cardiac output.</p>
+                        <p style="margin-top: 15px;"><strong>Teach others:</strong> The best way to solidify understanding is to explain these concepts to peers. If you can teach it clearly, you truly understand it.</p>
+                    </div>
+
+                    <div class="values-table">
+                        <h4>Quick Reference Values:</h4>
+                        <table>
+                            <tr>
+                                <th>Parameter</th>
+                                <th>Normal Value</th>
+                            </tr>
+                            <tr>
+                                <td>Ejection Fraction</td>
+                                <td>55-70%</td>
+                            </tr>
+                            <tr>
+                                <td>Stroke Volume</td>
+                                <td>60-100 mL</td>
+                            </tr>
+                            <tr>
+                                <td>Cardiac Output</td>
+                                <td>4-8 L/min</td>
+                            </tr>
+                            <tr>
+                                <td>EDV</td>
+                                <td>120-140 mL</td>
+                            </tr>
+                            <tr>
+                                <td>ESV</td>
+                                <td>40-60 mL</td>
+                            </tr>
+                            <tr>
+                                <td>LV End-Diastolic Pressure</td>
+                                <td>8-12 mmHg</td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <p style="text-align: center; margin-top: 30px; font-size: 1.1em; color: #666;">
+                        <strong>Keep practicing self-explanation with every complex topic.</strong><br>
+                        This skill will distinguish you as a clinician who truly understands, not just memorizes.
+                    </p>
+                `
+            }
+        ];
+
+        function renderProgressBar() {
+            const progressBar = document.getElementById('progressBar');
+            let html = '';
+            
+            for (let i = 0; i < totalSteps; i++) {
+                const activeClass = i <= currentStep ? 'active' : 'inactive';
+                html += `
+                    <div class="progress-step">
+                        <div class="step-circle ${activeClass}">${i + 1}</div>
+                        ${i < totalSteps - 1 ? `<div class="step-line ${i < currentStep ? 'active' : 'inactive'}"></div>` : ''}
+                    </div>
+                `;
+            }
+            
+            progressBar.innerHTML = html;
+        }
+
+        function renderContent() {
+            const contentBox = document.getElementById('contentBox');
+            contentBox.innerHTML = steps[currentStep].content;
+            
+            const nextBtn = document.getElementById('nextBtn');
+            if (currentStep === totalSteps - 1) {
+                nextBtn.innerHTML = 'Start Over';
+                nextBtn.className = 'btn-success';
+            } else {
+                nextBtn.innerHTML = 'Continue →';
+                nextBtn.className = 'btn-primary';
+            }
+        }
+
+        function nextStep() {
+            if (currentStep < totalSteps - 1) {
+                currentStep++;
+                renderProgressBar();
+                renderContent();
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        }
+
+        function resetDemo() {
+            currentStep = 0;
+            renderProgressBar();
+            renderContent();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        document.getElementById('nextBtn').addEventListener('click', function() {
+            if (currentStep === totalSteps - 1) {
+                resetDemo();
+            } else {
+                nextStep();
+            }
+        });
+
+        // Initialize
+        renderProgressBar();
+        renderContent();
+    </script>
+</body>
+</html>
