@@ -432,19 +432,7 @@ YOUR RESPONSE MUST BE ONLY VALID JSON.`;
         </div>
       )}
 
-      <div className="bg-white rounded-xl shadow-lg p-6 mt-6">
-        <h3 className="text-lg font-bold text-gray-900 mb-3">💡 How to Use This Tool:</h3>
-        <ol className="list-decimal list-inside space-y-2 text-gray-700">
-          <li>Read the learning content carefully</li>
-          <li>Write your explanation in your own words (don't just paraphrase!)</li>
-          <li>Click "Get AI Feedback" to receive personalized analysis</li>
-          <li>Review the feedback and compare with the expert explanation</li>
-          <li>Revise your explanation to deepen your understanding</li>
-        </ol>
-        <p className="mt-4 text-sm text-gray-600">
-          <strong>Tip:</strong> The AI analyzes your specific explanation to identify strengths, misconceptions, and gaps. The more thoughtful your explanation, the more useful the feedback!
-        </p>
-      </div>
+      
     </div>
   );
 };
