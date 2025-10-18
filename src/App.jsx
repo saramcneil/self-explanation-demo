@@ -209,7 +209,20 @@ YOUR RESPONSE MUST BE ONLY VALID JSON.`;
           </h1>
           <p className="text-gray-600">Get personalized feedback on your understanding</p>
         </div>
-
+ {/* Instructions Panel */}
+        <div className="bg-blue-50 border-2 border-blue-200 rounded-lg p-6 mb-6">
+          <h3 className="text-lg font-bold text-gray-900 mb-3">💡 How to Use This Tool:</h3>
+          <ol className="list-decimal list-inside space-y-2 text-gray-700">
+            <li>Read the learning content carefully</li>
+            <li>Write your explanation in your own words (don't just paraphrase!)</li>
+            <li>Click "Get AI Feedback" to receive personalized analysis</li>
+            <li>Review the feedback and compare with the expert explanation</li>
+            <li>Revise your explanation to deepen your understanding</li>
+          </ol>
+          <p className="mt-4 text-sm text-gray-600">
+            <strong>Tip:</strong> The AI analyzes your specific explanation to identify strengths, misconceptions, and gaps. The more thoughtful your explanation, the more useful the feedback!
+          </p>
+        </div>
         <div className="bg-purple-50 border-l-4 border-purple-600 p-6 rounded-lg mb-6">
           <h2 className="text-xl font-bold text-purple-900 mb-4">{contentData.title}</h2>
           <p className="text-gray-800 leading-relaxed mb-4">{contentData.text}</p>
